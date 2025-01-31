@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Machine Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Spin To Win</h1>
+        <p>Balance: ₹<span id="balance">2000</span></p>
+        <label for="betAmount">Bet Amount:</label>
+        <input type="number" id="betAmount" min="1" value="1">
+        <button id="spinButton">Spin</button>
+
+        <div class="slot-machine">
+            <!-- First wheel -->
+            <div class="wheel" id="wheel1">
+                <div class="reel">
+                    <img src="banana.png" alt="banana">
+                    <img src="pine.png" alt="pine">
+                    <img src="strawberry.png" alt="strawberry">
+                </div>
+            </div>
+
+            <!-- Second wheel -->
+            <div class="wheel" id="wheel2">
+                <div class="reel">
+                    <img src="banana.png" alt="banana">
+                    <img src="pine.png" alt="pine">
+                    <img src="strawberry.png" alt="strawberry">
+                </div>
+            </div>
+
+            <!-- Third wheel -->
+            <div class="wheel" id="wheel3">
+                <div class="reel">
+                    <img src="banana.png" alt="banana">
+                    <img src="pine.png" alt="pine">
+                    <img src="strawberry.png" alt="strawberry">
+                </div>
+            </div>
+        </div>
+
+        <p id="result"></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
