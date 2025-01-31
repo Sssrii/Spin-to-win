@@ -17,40 +17,34 @@ function getRandomSymbol() {
 }
 
 function rotateWheels() {
-    const spinDuration = 1000; 
-    const stopDelay = [1300, 1500, 1700]; 
+    const spinDuration = 1000; // Spins very fast for 1 second
+    const stopDelay = [1300, 1500, 1700]; // Stops each wheel at different times
 
     wheels.forEach((wheel, index) => {
         const reel = wheel.querySelector(".reel");
 
-        let extendedSymbols = [];
-        for (let i = 0; i < 9; i++) {
-            extendedSymbols.push(getRandomSymbol());
-        }
+        // Create an extended list of random symbols to simulate spinning
+        let extendedSymbols = [
+            getRandomSymbol(), getRandomSymbol(), getRandomSymbol(),
+            getRandomSymbol(), getRandomSymbol(), getRandomSymbol(),
+            getRandomSymbol(), getRandomSymbol(), getRandomSymbol()
+        ];
 
-        reel.innerHTML = extendedSymbols.map(symbol =>
-            `<img src="${symbol}.png" alt="${symbol}" style="width: 80px; height: 80px;">`
+        let newHTML = extendedSymbols.map(symbol =>
+            `<img src="${symbol}.png" alt="${symbol}">`
         ).join("");
 
+        reel.innerHTML = newHTML;
         reel.style.height = `${80 * extendedSymbols.length}px`;
 
-        // Reset position before spinning (ensures proper animation)
-        reel.style.transition = "none";
-        reel.style.transform = "translateY(0px)";
-        void reel.offsetHeight; // Forces repaint
+        let finalPosition = -((Math.floor(Math.random() * 3) + 1) * 80);
 
-        let finalIndex = Math.floor(Math.random() * 3) + 3; // Picks from middle section (index 3-5)
-        let finalPosition = -(finalIndex * 80);
-
-        // Apply smooth spin transition
         reel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.1, 0.8, 0.2, 1)`;
         reel.style.transform = `translateY(-${80 * (extendedSymbols.length - 3)}px)`;
 
-        // Stop at correct position
         setTimeout(() => {
             reel.style.transition = "transform 300ms ease-out";
             reel.style.transform = `translateY(${finalPosition}px)`;
-            reel.dataset.finalIndex = finalIndex; // Store index for win check
         }, stopDelay[index]);
     });
 
@@ -58,7 +52,7 @@ function rotateWheels() {
 }
 
 function checkWin() {
-    const middleSymbols = wheels.map((wheel) => {
+    const middleSymbols = wheels.map(wheel => {
         const reel = wheel.querySelector(".reel");
         const images = reel.querySelectorAll("img");
 
@@ -68,15 +62,16 @@ function checkWin() {
 
     console.log("Middle Row Symbols:", middleSymbols); // Debugging log
 
+    // Check if all middle symbols match
     let isWin = middleSymbols[0] === middleSymbols[1] && middleSymbols[1] === middleSymbols[2];
 
     wheels.forEach(wheel => {
         wheel.classList.remove("gold-border", "red-border");
 
         if (isWin) {
-            wheel.classList.add("gold-border");
+            wheel.classList.add("gold-border"); // Gold border for win
         } else {
-            wheel.classList.add("red-border");
+            wheel.classList.add("red-border"); // Red border for loss
         }
     });
 
@@ -89,13 +84,13 @@ function checkWin() {
         resultElement.textContent = "You Lost! Spin again.😭";
     }
 
+    // Remove the glow effect after 1.5 seconds
     setTimeout(() => {
         wheels.forEach(wheel => {
             wheel.classList.remove("gold-border", "red-border");
         });
     }, 1500);
 }
-
 
 spinButton.addEventListener("click", () => {
     const bet = parseInt(betInput.value);
