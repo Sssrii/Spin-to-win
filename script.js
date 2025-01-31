@@ -58,33 +58,44 @@ function rotateWheels() {
 }
 
 function checkWin() {
-    const middleSymbols = wheels.map(wheel => {
+    const middleSymbols = wheels.map((wheel) => {
         const reel = wheel.querySelector(".reel");
-        const finalIndex = parseInt(reel.dataset.finalIndex);
-        return reel.children[finalIndex].alt; 
+        const images = reel.querySelectorAll("img");
+
+        // Always pick the middle image (index 1)
+        return images[1].alt;
     });
+
+    console.log("Middle Row Symbols:", middleSymbols); // Debugging log
 
     let isWin = middleSymbols[0] === middleSymbols[1] && middleSymbols[1] === middleSymbols[2];
 
     wheels.forEach(wheel => {
         wheel.classList.remove("gold-border", "red-border");
-        wheel.classList.add(isWin ? "gold-border" : "red-border");
+
+        if (isWin) {
+            wheel.classList.add("gold-border");
+        } else {
+            wheel.classList.add("red-border");
+        }
     });
 
     if (isWin) {
         const winnings = parseInt(betInput.value) * symbolValues[middleSymbols[0]];
         balance += winnings;
+        balanceElement.textContent = balance;
         resultElement.textContent = `You won ₹${winnings}! 🎉`;
     } else {
         resultElement.textContent = "You Lost! Spin again.😭";
     }
 
-    balanceElement.textContent = balance;
-
     setTimeout(() => {
-        wheels.forEach(wheel => wheel.classList.remove("gold-border", "red-border"));
+        wheels.forEach(wheel => {
+            wheel.classList.remove("gold-border", "red-border");
+        });
     }, 1500);
 }
+
 
 spinButton.addEventListener("click", () => {
     const bet = parseInt(betInput.value);
