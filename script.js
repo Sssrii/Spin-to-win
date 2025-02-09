@@ -23,7 +23,6 @@ function rotateWheels() {
     wheels.forEach((wheel, index) => {
         const reel = wheel.querySelector(".reel");
 
-        // Create an extended list of random symbols to simulate spinning
         let extendedSymbols = [
             getRandomSymbol(), getRandomSymbol(), getRandomSymbol(),
             getRandomSymbol(), getRandomSymbol(), getRandomSymbol(),
@@ -54,24 +53,28 @@ function rotateWheels() {
 function checkWin() {
     const middleSymbols = wheels.map(wheel => {
         const reel = wheel.querySelector(".reel");
-        const images = reel.querySelectorAll("img");
+        const computedStyle = window.getComputedStyle(reel);
+        const transformValue = computedStyle.getPropertyValue("transform");
 
-        // Always pick the middle image (index 1)
-        return images[1].alt;
+        if (transformValue !== "none") {
+            const matrix = transformValue.match(/matrix.*\((.+)\)/)[1].split(', ');
+            const translateY = Math.abs(parseFloat(matrix[5]));
+
+            const index = Math.round(translateY / 80) + 1; // Correctly find middle symbol
+            return reel.children[index].alt; 
+        }
+        return null;
     });
 
-    console.log("Middle Row Symbols:", middleSymbols); // Debugging log
-
-    // Check if all middle symbols match
     let isWin = middleSymbols[0] === middleSymbols[1] && middleSymbols[1] === middleSymbols[2];
 
     wheels.forEach(wheel => {
         wheel.classList.remove("gold-border", "red-border");
 
         if (isWin) {
-            wheel.classList.add("gold-border"); // Gold border for win
+            wheel.classList.add("gold-border");
         } else {
-            wheel.classList.add("red-border"); // Red border for loss
+            wheel.classList.add("red-border");
         }
     });
 
@@ -84,7 +87,6 @@ function checkWin() {
         resultElement.textContent = "You Lost! Spin again.😭";
     }
 
-    // Remove the glow effect after 1.5 seconds
     setTimeout(() => {
         wheels.forEach(wheel => {
             wheel.classList.remove("gold-border", "red-border");
